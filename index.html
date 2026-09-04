@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#006AA7">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Vokabel SE">
+  <meta name="description" content="Vokabeltrainer Deutsch ↔ Schwedisch – die 300 häufigsten Wörter">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+  <link rel="icon" type="image/png" sizes="512x512" href="icon-512.png">
+  <title>Vokabeltrainer DE ↔ SE</title>
+  <style>
+    :root {
+      --primary: #006AA7;
+      --primary-dark: #004B75;
+      --accent: #FECC00;
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --success: #22c55e;
+      --error: #ef4444;
+      --radius: 16px;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100dvh;
+      padding-bottom: var(--safe-bottom);
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-svg {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      flex-shrink: 0;
+    }
+
+    header h1 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .stats {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+      text-align: right;
+      line-height: 1.3;
+    }
+
+    /* Controls */
+    .controls {
+      padding: 12px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background: var(--card);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .toggle-group, .category-group {
+      display: flex;
+      background: rgba(0,0,0,0.25);
+      border-radius: 12px;
+      padding: 3px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .toggle-btn, .cat-btn {
+      flex: 1;
+      padding: 10px 6px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .toggle-btn.active, .cat-btn.active {
+      background: var(--primary);
+      color: white;
+      box-shadow: 0 2px 8px rgba(0,106,167,0.4);
+    }
+
+    .cat-btn {
+      font-size: 0.78rem;
+      padding: 9px 4px;
+    }
+
+    /* Main card area */
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+      gap: 16px;
+      max-width: 520px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 28px 20px;
+      text-align: center;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+      min-height: 220px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+    }
+
+    .prompt-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .prompt-word {
+      font-size: 2rem;
+      font-weight: 700;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+
+    .answer-area {
+      margin-top: 8px;
+    }
+
+    .answer-word {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .answer-details {
+      margin-top: 10px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .answer-details strong {
+      color: var(--text);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Buttons */
+    .btn-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 16px 12px;
+      border: none;
+      border-radius: 14px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s, opacity 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+
+    .btn-error {
+      background: var(--error);
+      color: white;
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: rgba(255,255,255,0.08);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      border-radius: 3px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    .info-text {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* Install banner */
+    .install-banner {
+      background: var(--accent);
+      color: #111;
+      padding: 10px 16px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .install-banner.show {
+      display: flex;
+    }
+
+    .install-banner button {
+      background: #111;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 12px;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    /* Feedback flash */
+    .flash-success {
+      animation: flashGreen 0.4s ease;
+    }
+    .flash-error {
+      animation: flashRed 0.4s ease;
+    }
+    @keyframes flashGreen {
+      0%, 100% { box-shadow: 0 8px 32px rgba(0,0,0,0.35); }
+      50% { box-shadow: 0 0 0 4px var(--success); }
+    }
+    @keyframes flashRed {
+      0%, 100% { box-shadow: 0 8px 32px rgba(0,0,0,0.35); }
+      50% { box-shadow: 0 0 0 4px var(--error); }
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+    .empty-state h2 {
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    @media (max-width: 380px) {
+      .prompt-word { font-size: 1.7rem; }
+      .answer-word { font-size: 1.4rem; }
+      .cat-btn { font-size: 0.7rem; padding: 8px 2px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="install-banner" id="installBanner">
+    <span>📲 App zum Home-Bildschirm hinzufügen</span>
+    <button id="installBtn">Installieren</button>
+  </div>
+
+  <header>
+    <div class="logo-area">
+      <!-- Swedish flag stylized + elk hint -->
+      <svg class="logo-svg" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg">
+        <rect width="36" height="36" rx="8" fill="#006AA7"/>
+        <rect x="0" y="14" width="36" height="8" fill="#FECC00"/>
+        <rect x="12" y="0" width="8" height="36" fill="#FECC00"/>
+      </svg>
+      <h1>Vokabel DE ↔ SE</h1>
+    </div>
+    <div class="stats" id="stats">
+      0 / 0<br><span style="font-size:0.7rem">richtig</span>
+    </div>
+  </header>
+
+  <div class="controls">
+    <div class="row">
+      <div class="toggle-group" id="directionToggle">
+        <button class="toggle-btn active" data-dir="de-se">DE → SE</button>
+        <button class="toggle-btn" data-dir="se-de">SE → DE</button>
+      </div>
+    </div>
+    <div class="row">
+      <div class="category-group" id="categoryGroup">
+        <button class="cat-btn active" data-cat="mixed">Gemischt</button>
+        <button class="cat-btn" data-cat="noun">Nomen</button>
+        <button class="cat-btn" data-cat="verb">Verben</button>
+        <button class="cat-btn" data-cat="prep">Präp.</button>
+        <button class="cat-btn" data-cat="other">Rest</button>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="info-text" id="queueInfo">Lade Wörter…</div>
+
+    <div class="card" id="card">
+      <div class="prompt-label" id="promptLabel">Übersetze</div>
+      <div class="prompt-word" id="promptWord">—</div>
+      <div class="answer-area hidden" id="answerArea">
+        <div class="answer-word" id="answerWord"></div>
+        <div class="answer-details" id="answerDetails"></div>
+      </div>
+    </div>
+
+    <div class="btn-row" id="showRow">
+      <button class="btn btn-primary" id="showBtn">Antwort zeigen</button>
+    </div>
+    <div class="btn-row hidden" id="rateRow">
+      <button class="btn btn-error" id="wrongBtn">❌ Falsch</button>
+      <button class="btn btn-success" id="rightBtn">✓ Richtig</button>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-secondary" id="resetBtn" style="flex:0.4">↻ Reset</button>
+      <button class="btn btn-secondary" id="skipBtn">Überspringen</button>
+    </div>
+  </main>
+
+  <footer>
+    300 häufigste schwedische Wörter · PWA für GitHub Pages
+  </footer>
+
+  <script src="vocab.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
