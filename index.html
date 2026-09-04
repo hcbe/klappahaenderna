@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0b5d4b" />
+  <meta name="description" content="Mobiler Deutsch-Schwedisch Vokabeltrainer mit 300 häufigen Grundwörtern." />
+  <link rel="manifest" href="./manifest.webmanifest" />
+  <link rel="icon" href="./icons/icon-192.png" />
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" />
+  <link rel="stylesheet" href="./styles.css" />
+  <title>Svenska 300</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">VOKABELTRAINER</div>
+        <h1>Svenska 300</h1>
+      </div>
+      <button id="settingsBtn" class="icon-btn" aria-label="Einstellungen öffnen">⚙</button>
+    </header>
+
+    <main>
+      <section id="setupView" class="panel setup-panel">
+        <h2>Training starten</h2>
+        <p class="muted">300 häufige und lernrelevante schwedische Grundwörter.</p>
+
+        <label class="field-label">Sprachrichtung</label>
+        <div class="segmented" id="directionControl">
+          <button class="segment active" data-value="de-sv">Deutsch → Svenska</button>
+          <button class="segment" data-value="sv-de">Svenska → Deutsch</button>
+        </div>
+
+        <label class="field-label">Wortgruppe</label>
+        <div class="category-grid" id="categoryControl">
+          <button class="category active" data-value="mixed"><span>Gemischt</span><small>alle 300</small></button>
+          <button class="category" data-value="noun"><span>Nomen</span><small>Artikel + Plural</small></button>
+          <button class="category" data-value="verb"><span>Verben</span><small>Infinitiv + Präsens</small></button>
+          <button class="category" data-value="prep"><span>Präpositionen</span><small>häufige Formen</small></button>
+          <button class="category" data-value="rest"><span>Restliche</span><small>Adjektive, Adverbien …</small></button>
+        </div>
+
+        <div class="setup-actions">
+          <button id="startBtn" class="primary-btn">Training starten</button>
+          <button id="resetBtn" class="secondary-btn">Lernstand zurücksetzen</button>
+        </div>
+      </section>
+
+      <section id="trainerView" class="trainer hidden">
+        <div class="stats-row">
+          <div><span id="progressText">0 / 0</span><small>Runde</small></div>
+          <div><span id="accuracyText">–</span><small>Trefferquote</small></div>
+          <div><span id="streakText">0</span><small>Serie</small></div>
+        </div>
+        <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+
+        <article class="card" id="card">
+          <div class="card-topline">
+            <span id="categoryBadge" class="badge">Nomen</span>
+            <span id="rankBadge" class="rank">#1</span>
+          </div>
+          <p class="prompt-label" id="promptLabel">Übersetze ins Schwedische</p>
+          <div id="promptWord" class="prompt-word">Haus</div>
+          <div id="promptForms" class="prompt-forms"></div>
+
+          <form id="answerForm" autocomplete="off">
+            <label for="answerInput" class="sr-only">Antwort</label>
+            <input id="answerInput" class="answer-input" type="text" inputmode="text" autocapitalize="none" spellcheck="false" placeholder="Antwort eingeben …" />
+            <div class="swedish-keys" aria-label="Schwedische Sonderzeichen">
+              <button type="button" data-char="å">å</button>
+              <button type="button" data-char="ä">ä</button>
+              <button type="button" data-char="ö">ö</button>
+            </div>
+            <button id="checkBtn" class="primary-btn" type="submit">Prüfen</button>
+          </form>
+
+          <div id="feedback" class="feedback hidden" aria-live="polite">
+            <div id="feedbackTitle" class="feedback-title"></div>
+            <div id="solution" class="solution"></div>
+            <button id="nextBtn" class="primary-btn">Weiter</button>
+          </div>
+        </article>
+
+        <div class="trainer-actions">
+          <button id="skipBtn" class="text-btn">Überspringen</button>
+          <button id="endBtn" class="text-btn">Training beenden</button>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>Offlinefähig · Lernstand lokal gespeichert</span>
+      <a href="https://spraakbanken.gu.se/en/resources/kelly" target="_blank" rel="noopener">Wortfrequenz: Swedish Kelly List</a>
+    </footer>
+  </div>
+
+  <dialog id="settingsDialog">
+    <form method="dialog" class="dialog-card">
+      <div class="dialog-head"><h2>Einstellungen</h2><button class="icon-btn" value="cancel" aria-label="Schließen">×</button></div>
+      <label class="toggle-row"><span>Umlaute tolerant prüfen<small>z. B. a statt å akzeptieren</small></span><input id="diacriticsToggle" type="checkbox" /></label>
+      <label class="toggle-row"><span>Antwort mit Enter fortsetzen<small>nach der Auswertung</small></span><input id="enterNextToggle" type="checkbox" checked /></label>
+      <button class="secondary-btn" value="cancel">Schließen</button>
+    </form>
+  </dialog>
+
+  <script src="./words.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
