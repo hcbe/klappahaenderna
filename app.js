@@ -30,20 +30,14 @@
   }
   function acceptableAnswers(w){
     if(direction==='sv-de') return [w.de, ...(w.altDe||[])];
-    if(w.type==='noun') {
-      const full=`${w.article} ${w.sv}, ${w.plural}`;
-      return [full, `${w.article} ${w.sv} ${w.plural}`, `${w.article} ${w.sv}`, w.sv, ...(w.altSv||[])];
-    }
-    if(w.type==='verb') {
-      const full=`att ${w.sv}, ${w.present}`;
-      return [full, `att ${w.sv} ${w.present}`, `${w.sv}, ${w.present}`, `${w.sv} ${w.present}`, w.sv, ...(w.altSv||[])];
-    }
+    if(w.type==='noun') return [w.sv, `${w.article} ${w.sv}`, ...(w.altSv||[])];
+    if(w.type==='verb') return [w.sv, `att ${w.sv}`, ...(w.altSv||[])];
     return [w.sv, ...(w.altSv||[])];
   }
   function expected(w){
     if(direction==='sv-de') return w.de;
-    if(w.type==='noun') return `${w.article} ${w.sv} · Plural: ${w.plural}`;
-    if(w.type==='verb') return `att ${w.sv} · Präsens: ${w.present}`;
+    if(w.type==='noun' || w.type==='verb') return w.sv;
+    return w.sv;
     return w.sv;
   }
   function matchesAnswer(input,w){
@@ -83,15 +77,24 @@
     if(direction==='de-sv') {
       $('#promptLabel').textContent='Übersetze ins Schwedische';
       $('#promptWord').textContent=current.de;
-      $('#promptForms').textContent=current.type==='noun'?'Artikel + Singular + Plural eingeben':current.type==='verb'?'Infinitiv + Präsens eingeben':'';
-      $('#answerInput').placeholder=current.type==='noun'?'z. B. en bil, bilar':current.type==='verb'?'z. B. att komma, kommer':'Schwedische Antwort …';
+      $('#promptForms').textContent='';
+      $('#answerInput').placeholder='Schwedische Vokabel …';
     } else {
       $('#promptLabel').textContent='Übersetze ins Deutsche';
-      $('#promptWord').textContent=current.type==='noun'?`${current.article} ${current.sv}`:current.type==='verb'?`att ${current.sv}`:current.sv;
-      $('#promptForms').textContent=current.type==='noun'?`Plural: ${current.plural}`:current.type==='verb'?`Präsens: ${current.present}`:'';
+      $('#promptWord').textContent=current.sv;
+      $('#promptForms').textContent='';
       $('#answerInput').placeholder='Deutsche Bedeutung …';
     }
     updateStats();
+  }
+  function grammarInfo(w){
+    if(w.type==='noun') {
+      const pluralIndef=w.plural==='-'?'—':w.plural;
+      const pluralDef=w.definitePlural==='-'?'—':w.definitePlural;
+      return `<div class="grammar-card"><div class="grammar-title">Formen</div><div class="grammar-grid"><span>Singular unbestimmt</span><strong>${w.article} ${w.sv}</strong><span>Singular bestimmt</span><strong>${w.definiteSingular}</strong><span>Plural unbestimmt</span><strong>${pluralIndef}</strong><span>Plural bestimmt</span><strong>${pluralDef}</strong></div></div>`;
+    }
+    if(w.type==='verb') return `<div class="grammar-card"><div class="grammar-title">Verbformen</div><div class="grammar-grid"><span>Infinitiv</span><strong>att ${w.sv}</strong><span>Präsens</span><strong>${w.present}</strong></div></div>`;
+    return '';
   }
   function updateStats(){
     const total=filteredWords().length;
@@ -110,7 +113,7 @@
     $('#answerForm').classList.add('hidden');
     const fb=$('#feedback'); fb.className=`feedback ${good?'good':'bad'}`;
     $('#feedbackTitle').textContent=good?'Richtig':'Noch einmal lernen';
-    $('#solution').innerHTML=`<strong>${expected(current)}</strong>${good?'':'<br><span class="muted">Die Karte erscheint gleich erneut.</span>'}`;
+    $('#solution').innerHTML=good ? `<strong>${expected(current)}</strong>${grammarInfo(current)}` : `<strong>${expected(current)}</strong><br><span class="muted">Die Karte erscheint gleich erneut.</span>`;
     feedbackOpen=true; updateStats(); saveState();
   }
   function endTraining(){
