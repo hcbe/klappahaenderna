@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<meta name="theme-color" content="#0f172a">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Svenska 200">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Svenska 200</title>
+<style>
+:root{--bg:#0f172a;--card:#111827;--card2:#1f2937;--text:#f8fafc;--muted:#94a3b8;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--border:#334155}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+body{min-height:100dvh;padding:max(12px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));display:flex;justify-content:center;align-items:stretch;overscroll-behavior:none}
+.app{width:100%;max-width:560px;min-height:calc(100dvh - 28px);display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:4px 2px 12px}
+h1{font-size:24px;margin:0;font-weight:800}.tag{font-size:13px;color:var(--muted)}
+.progress{height:7px;background:#1e293b;border-radius:99px;overflow:hidden;margin-bottom:14px}.progress>div{height:100%;background:var(--blue);width:0%;transition:.2s}
+.card{flex:1;background:linear-gradient(180deg,var(--card),#0b1220);border:1px solid var(--border);border-radius:22px;padding:20px;display:flex;flex-direction:column;box-shadow:0 12px 35px rgba(0,0,0,.2);touch-action:pan-y}
+.meta{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:13px;margin-bottom:8px}
+.prompt{color:var(--muted);font-size:14px;text-align:center;margin-top:10px}
+.word{flex:1;min-height:180px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(42px,12vw,68px);font-weight:800;line-height:1.08;padding:18px 0;word-break:break-word}
+.answer{min-height:72px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(28px,8vw,40px);font-weight:700;color:#93c5fd;margin-bottom:14px;padding:8px 0}
+.blur{filter:blur(9px);opacity:.55;user-select:none}
+button{appearance:none;border:0;border-radius:16px;min-height:58px;font-size:18px;font-weight:800;padding:14px 16px;cursor:pointer}
+.show{background:var(--blue);color:white;width:100%}
+.judge{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.bad{background:#3b1114;color:#fecaca;border:1px solid #7f1d1d}.good{background:#0d2d1a;color:#bbf7d0;border:1px solid #166534}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:14px}
+.stat{border:1px solid var(--border);background:rgba(15,23,42,.65);border-radius:13px;padding:10px 5px;text-align:center}.stat b{display:block;font-size:18px}.stat span{font-size:10px;color:var(--muted)}
+.bottom{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
+.secondary{min-height:44px;font-size:13px;font-weight:700;background:var(--card2);color:#e2e8f0;border:1px solid var(--border);border-radius:13px}
+.hint{text-align:center;color:var(--muted);font-size:11px;margin-top:8px}
+@media(max-width:390px){.card{padding:16px}.word{min-height:155px}.stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="top"><div><h1>Svenska 200</h1><div class="tag">Schwedisch-Vokabeltrainer</div></div><div class="tag" id="counter">0 gelernt</div></div>
+<div class="progress"><div id="progressBar"></div></div>
+<main class="card" id="card">
+<div class="meta"><span id="mode">Schwedisch → Deutsch</span><span id="answers">0 Antworten</span></div>
+<div class="prompt" id="prompt">Was bedeutet dieses Wort?</div>
+<div class="word" id="question">hej</div>
+<div class="answer blur" id="answer">hallo</div>
+<div id="showArea"><button class="show" id="showBtn">Übersetzung anzeigen</button></div>
+<div class="judge" id="judgeArea" style="display:none"><button class="bad" id="wrongBtn">✕ Falsch</button><button class="good" id="rightBtn">✓ Richtig</button></div>
+<div class="stats"><div class="stat"><b id="correct">0</b><span>Richtig</span></div><div class="stat"><b id="wrong">0</b><span>Falsch</span></div><div class="stat"><b id="rate">–</b><span>Quote</span></div><div class="stat"><b id="problems">0</b><span>Problemwörter</span></div></div>
+<div class="bottom"><button class="secondary" id="switchBtn">⇄ Richtung wechseln</button><button class="secondary" id="resetBtn">Lernstand löschen</button></div>
+<div class="hint">Nach dem Aufdecken: nach links = falsch, nach rechts = richtig</div>
+</main></div>
+<script>
+const vocab = [
+["hej","hallo"],["hejdå","tschüss"],["tack","danke"],["snälla","bitte"],["ja","ja"],["nej","nein"],["kanske","vielleicht"],["och","und"],["eller","oder"],["men","aber"],["för","für / weil"],["med","mit"],["utan","ohne"],["i","in"],["på","auf / an"],["under","unter"],["över","über"],["från","von / aus"],["till","zu / nach"],["hos","bei"],["om","über / wenn"],["som","wie / der-die-das"],["att","zu / dass"],["inte","nicht"],["också","auch"],["bara","nur"],["mycket","viel / sehr"],["lite","wenig / etwas"],["mer","mehr"],["mindre","weniger"],["alltid","immer"],["aldrig","nie"],["ofta","oft"],["ibland","manchmal"],["nu","jetzt"],["sen","später / dann"],["idag","heute"],["igår","gestern"],["imorgon","morgen"],["morgon","Morgen"],["dag","Tag"],["kväll","Abend"],["natt","Nacht"],["vecka","Woche"],["månad","Monat"],["år","Jahr"],["tid","Zeit"],["gång","Mal / Gang"],["här","hier"],["där","dort"],["hem","nach Hause"],["hemma","zu Hause"],["borta","weg / nicht da"],["vem","wer"],["vad","was"],["var","wo"],["vart","wohin"],["när","wann / wenn"],["hur","wie"],["varför","warum"],["vilken","welcher"],["vilket","welches"],["vilka","welche"],["jag","ich"],["du","du"],["han","er"],["hon","sie"],["den","der / die"],["det","das / es"],["vi","wir"],["ni","ihr / Sie"],["de","sie"],["min","mein"],["din","dein"],["hans","sein"],["hennes","ihr"],["vår","unser"],["er","euer / Ihr"],["deras","deren / ihr"],["man","man"],["någon","jemand / irgendein"],["något","etwas / irgendein"],["ingen","niemand / kein"],["alla","alle"],["många","viele"],["få","wenige"],["en","ein / eine"],["ett","ein / eine"],["första","erste"],["andra","zweite / andere"],["samma","gleich / derselbe"],["annan","anderer"],["stor","groß"],["liten","klein"],["bra","gut"],["dålig","schlecht"],["ny","neu"],["gammal","alt"],["ung","jung"],["vacker","schön"],["ful","hässlich"],["glad","froh"],["ledsen","traurig"],["trött","müde"],["hungrig","hungrig"],["törstig","durstig"],["varm","warm"],["kall","kalt"],["lång","lang"],["kort","kurz"],["snabb","schnell"],["långsam","langsam"],["lätt","leicht"],["svår","schwierig"],["dyr","teuer"],["billig","billig"],["viktig","wichtig"],["rätt","richtig / Recht"],["fel","falsch / Fehler"],["vara","sein"],["ha","haben"],["göra","machen / tun"],["gå","gehen"],["komma","kommen"],["se","sehen"],["höra","hören"],["säga","sagen"],["prata","sprechen / reden"],["fråga","fragen"],["svara","antworten"],["veta","wissen"],["kunna","können"],["vilja","wollen"],["måste","müssen"],["behöva","brauchen / müssen"],["få","dürfen / bekommen"],["ta","nehmen"],["ge","geben"],["köpa","kaufen"],["betala","bezahlen"],["äta","essen"],["dricka","trinken"],["sova","schlafen"],["bo","wohnen"],["jobba","arbeiten"],["läsa","lesen"],["skriva","schreiben"],["lära","lernen"],["förstå","verstehen"],["glömma","vergessen"],["minnas","sich erinnern"],["hitta","finden"],["leta","suchen"],["vänta","warten"],["hjälpa","helfen"],["börja","beginnen"],["sluta","aufhören / enden"],["öppna","öffnen"],["stänga","schließen"],["köra","fahren"],["resa","reisen"],["stå","stehen"],["sitta","sitzen"],["ligga","liegen"],["hus","Haus"],["rum","Zimmer"],["dörr","Tür"],["fönster","Fenster"],["bord","Tisch"],["stol","Stuhl"],["säng","Bett"],["kök","Küche"],["toalett","Toilette"],["bil","Auto"],["buss","Bus"],["tåg","Zug"],["väg","Straße / Weg"],["stad","Stadt"],["land","Land"],["arbete","Arbeit"],["skola","Schule"],["butik","Geschäft"],["mat","Essen / Lebensmittel"],["vatten","Wasser"],["kaffe","Kaffee"],["bröd","Brot"],["mjölk","Milch"],["kött","Fleisch"],["fisk","Fisch"],["frukt","Obst"],["pengar","Geld"],["pris","Preis"],["vän","Freund"],["familj","Familie"],["barn","Kind"],["kvinna","Frau"],["mamma","Mutter"],["pappa","Vater"],["namn","Name"],["språk","Sprache"],["svenska","Schwedisch"],["tyska","Deutsch"],["Sverige","Schweden"],["Tyskland","Deutschland"],["problem","Problem"]
+].slice(0,200);
+
+const KEY="svenska200_mobile_v2";
+function fresh(){return{scores:Array(vocab.length).fill(0),seen:Array(vocab.length).fill(0),correct:0,wrong:0,answered:0,reverse:false}}
+let state=(()=>{try{let x=JSON.parse(localStorage.getItem(KEY));return x&&x.scores?.length===vocab.length?{...fresh(),...x}:fresh()}catch(e){return fresh()}})();
+let current=Math.floor(Math.random()*vocab.length),revealed=false,startX=0;
+function save(){localStorage.setItem(KEY,JSON.stringify(state))}
+function pick(){const w=vocab.map((_,i)=>{let s=state.scores[i],z=1;if(s<0)z+=Math.abs(s)*4.5;else if(s===0)z+=2;else z=Math.max(.35,1.5/(1+s*.65));if(!state.seen[i])z+=2.2;if(i===current)z*=.15;return z});let t=w.reduce((a,b)=>a+b,0),r=Math.random()*t;for(let i=0;i<w.length;i++){r-=w[i];if(r<=0)return i}return 0}
+function render(){revealed=false;let[sv,de]=vocab[current];question.textContent=state.reverse?de:sv;answer.textContent=state.reverse?sv:de;answer.classList.add("blur");showArea.style.display="block";judgeArea.style.display="none";mode.textContent=state.reverse?"Deutsch → Schwedisch":"Schwedisch → Deutsch";prompt.textContent=state.reverse?"Wie heißt dieses Wort auf Schwedisch?":"Was bedeutet dieses Wort?";update()}
+function reveal(){if(revealed)return;revealed=true;answer.classList.remove("blur");showArea.style.display="none";judgeArea.style.display="grid"}
+function judge(ok){if(!revealed)return;state.seen[current]++;state.answered++;if(ok){state.correct++;state.scores[current]=Math.min(5,state.scores[current]+1)}else{state.wrong++;state.scores[current]=Math.max(-5,state.scores[current]-2)}save();current=pick();render()}
+function update(){const learned=state.scores.filter(x=>x>0).length,total=state.correct+state.wrong;correct.textContent=state.correct;wrong.textContent=state.wrong;rate.textContent=total?Math.round(state.correct/total*100)+"%":"–";problems.textContent=state.scores.filter(x=>x<0).length;answers.textContent=state.answered+" Antworten";counter.textContent=learned+" gelernt";progressBar.style.width=Math.round(learned/vocab.length*100)+"%"}
+showBtn.onclick=reveal;answer.onclick=reveal;rightBtn.onclick=()=>judge(true);wrongBtn.onclick=()=>judge(false);switchBtn.onclick=()=>{state.reverse=!state.reverse;save();render()};resetBtn.onclick=()=>{if(confirm("Gesamten Lernstand löschen?")){state=fresh();save();current=Math.floor(Math.random()*vocab.length);render()}};
+card.addEventListener("touchstart",e=>{startX=e.changedTouches[0].screenX},{passive:true});
+card.addEventListener("touchend",e=>{if(!revealed)return;let d=e.changedTouches[0].screenX-startX;if(Math.abs(d)>70)d>0?judge(true):judge(false)},{passive:true});
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"))}
+render();
+</script>
+</body>
+</html>
