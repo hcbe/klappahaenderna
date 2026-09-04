@@ -1,145 +1,375 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
-<meta name="theme-color" content="#0f172a">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Svenska 200">
-<link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="icon-180.png">
-<title>Svenska 200</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vokabeltrainer</title>
 <style>
-:root{--bg:#0f172a;--card:#111827;--card2:#1f2937;--text:#f8fafc;--muted:#94a3b8;--blue:#3b82f6;--green:#22c55e;--red:#ef4444;--border:#334155}
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
-body{min-height:100dvh;padding:max(12px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(14px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left));display:flex;justify-content:center;align-items:stretch;overscroll-behavior:none}
-.app{width:100%;max-width:560px;min-height:calc(100dvh - 28px);display:flex;flex-direction:column}
-.top{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:4px 2px 12px}
-h1{font-size:24px;margin:0;font-weight:800}.tag{font-size:13px;color:var(--muted)}
-.progress{height:7px;background:#1e293b;border-radius:99px;overflow:hidden;margin-bottom:14px}.progress>div{height:100%;background:var(--blue);width:0%;transition:.2s}
-.card{flex:1;background:linear-gradient(180deg,var(--card),#0b1220);border:1px solid var(--border);border-radius:22px;padding:20px;display:flex;flex-direction:column;box-shadow:0 12px 35px rgba(0,0,0,.2);touch-action:pan-y}
-.meta{display:flex;justify-content:space-between;gap:12px;color:var(--muted);font-size:13px;margin-bottom:8px}
-.prompt{color:var(--muted);font-size:14px;text-align:center;margin-top:10px}
-.word{flex:1;min-height:180px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(42px,12vw,68px);font-weight:800;line-height:1.08;padding:18px 0;word-break:break-word}
-.answer{min-height:72px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(28px,8vw,40px);font-weight:700;color:#93c5fd;margin-bottom:4px;padding:8px 0}
-.grammar-info{min-height:40px;text-align:center;color:#cbd5e1;font-size:15px;font-weight:650;line-height:1.4;margin:0 0 14px;padding:4px 8px}.grammar-info strong{color:#f8fafc}
-.blur{filter:blur(9px);opacity:.55;user-select:none}
-button{appearance:none;border:0;border-radius:16px;min-height:58px;font-size:18px;font-weight:800;padding:14px 16px;cursor:pointer}
-.show{background:var(--blue);color:white;width:100%}
-.judge{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.bad{background:#3b1114;color:#fecaca;border:1px solid #7f1d1d}.good{background:#0d2d1a;color:#bbf7d0;border:1px solid #166534}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:14px}
-.stat{border:1px solid var(--border);background:rgba(15,23,42,.65);border-radius:13px;padding:10px 5px;text-align:center}.stat b{display:block;font-size:18px}.stat span{font-size:10px;color:var(--muted)}
-.bottom{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
-.secondary{min-height:44px;font-size:13px;font-weight:700;background:var(--card2);color:#e2e8f0;border:1px solid var(--border);border-radius:13px}
-.hint{text-align:center;color:var(--muted);font-size:11px;margin-top:8px}
-@media(max-width:390px){.card{padding:16px}.word{min-height:155px}.stats{grid-template-columns:repeat(2,1fr)}}
+:root{
+  --bg:#f5f3ef; --card:#ffffff; --text:#232323; --muted:#6b6b6b;
+  --accent:#2f5d50; --border:#ddd8cf; --ok:#2f7d4a; --bad:#a23b3b;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:var(--bg);color:var(--text)}
+.wrap{max-width:900px;margin:0 auto;padding:24px}
+h1{margin:0 0 8px;font-size:30px}
+.sub{color:var(--muted);margin-bottom:20px}
+.panel,.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.panel{margin-bottom:16px}
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
+select,input,button{font:inherit}
+select,input[type=text]{width:100%;padding:11px 12px;border:1px solid var(--border);border-radius:10px;background:white}
+button{border:0;border-radius:10px;padding:11px 14px;cursor:pointer}
+.primary{background:var(--accent);color:white}
+.secondary{background:#ece8e0}
+.good{background:#e7f3ea;color:var(--ok)}
+.bad{background:#f8e7e7;color:var(--bad)}
+.word{font-size:34px;font-weight:700;margin:10px 0 4px}
+.prompt{font-size:18px;color:var(--muted);margin-bottom:14px}
+.forms{border-top:1px solid var(--border);margin-top:14px;padding-top:14px;display:grid;gap:7px}
+.formrow{display:flex;gap:10px;align-items:flex-start}
+.formrow b{min-width:180px}
+.answer{margin-top:16px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.feedback{margin-top:12px;font-weight:600}
+.stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;color:var(--muted);font-size:14px}
+.hidden{display:none!important}
+.small{font-size:13px;color:var(--muted)}
+hr{border:0;border-top:1px solid var(--border);margin:16px 0}
+@media(max-width:600px){
+ .word{font-size:28px}
+ .formrow{display:block}
+ .formrow b{display:block;margin-bottom:2px}
+}
 </style>
 </head>
 <body>
-<div class="app">
-<div class="top"><div><h1>Svenska 200</h1><div class="tag">Schwedisch-Vokabeltrainer</div></div><div class="tag" id="counter">0 gelernt</div></div>
-<div class="progress"><div id="progressBar"></div></div>
-<main class="card" id="card">
-<div class="meta"><span id="mode">Schwedisch → Deutsch</span><span id="answers">0 Antworten</span></div>
-<div class="prompt" id="prompt">Was bedeutet dieses Wort?</div>
-<div class="word" id="question">hej</div>
-<div class="answer blur" id="answer">hallo</div>
-<div class="grammar-info blur" id="grammarInfo"></div>
-<div id="showArea"><button class="show" id="showBtn">Übersetzung anzeigen</button></div>
-<div class="judge" id="judgeArea" style="display:none"><button class="bad" id="wrongBtn">✕ Falsch</button><button class="good" id="rightBtn">✓ Richtig</button></div>
-<div class="stats"><div class="stat"><b id="correct">0</b><span>Richtig</span></div><div class="stat"><b id="wrong">0</b><span>Falsch</span></div><div class="stat"><b id="rate">–</b><span>Quote</span></div><div class="stat"><b id="problems">0</b><span>Problemwörter</span></div></div>
-<div class="bottom"><button class="secondary" id="switchBtn">⇄ Richtung wechseln</button><button class="secondary" id="resetBtn">Lernstand löschen</button></div>
-<div class="hint">Nach dem Aufdecken: nach links = falsch, nach rechts = richtig</div>
-</main></div>
+<div class="wrap">
+  <h1>Vokabeltrainer</h1>
+  <div class="sub">Wörter, Formen und Wiederholung nach Fehlerhäufigkeit</div>
+
+  <div class="panel">
+    <div class="controls">
+      <div>
+        <label>Kategorie</label>
+        <select id="category">
+          <option value="all">Alle gemischt</option>
+          <option value="noun">Nomen</option>
+          <option value="verb">Verben</option>
+          <option value="adjective">Adjektive</option>
+          <option value="basic">Grundwörter</option>
+        </select>
+      </div>
+      <div>
+        <label>Abfragerichtung</label>
+        <select id="direction">
+          <option value="mixed">Gemischt</option>
+          <option value="sv-de">Schwedisch → Deutsch</option>
+          <option value="de-sv">Deutsch → Schwedisch</option>
+          <option value="forms">Formen lernen</option>
+        </select>
+      </div>
+      <div>
+        <label>Antwortprüfung</label>
+        <select id="strictness">
+          <option value="normal">Normal</option>
+          <option value="lenient">Kulant</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div id="typeLabel" class="small"></div>
+    <div id="word" class="word">–</div>
+    <div id="prompt" class="prompt"></div>
+
+    <div id="visibleForms" class="forms hidden"></div>
+
+    <div class="answer">
+      <input id="answerInput" type="text" autocomplete="off" placeholder="Antwort eingeben …">
+      <div class="actions">
+        <button id="checkBtn" class="primary">Prüfen</button>
+        <button id="showBtn" class="secondary">Lösung zeigen</button>
+        <button id="skipBtn" class="secondary">Überspringen</button>
+      </div>
+      <div id="feedback" class="feedback"></div>
+    </div>
+
+    <div id="solutionBox" class="forms hidden"></div>
+
+    <div id="manualActions" class="actions hidden">
+      <button id="manualRight" class="good">Als richtig werten</button>
+      <button id="manualWrong" class="bad">Als falsch werten</button>
+      <button id="nextBtn" class="primary">Nächste</button>
+    </div>
+
+    <div class="stats">
+      <span>Richtig: <b id="rightCount">0</b></span>
+      <span>Falsch: <b id="wrongCount">0</b></span>
+      <span>Serie: <b id="streak">0</b></span>
+    </div>
+  </div>
+</div>
+
 <script>
 const vocab = [
-["hej","hallo"],["hejdå","tschüss"],["tack","danke"],["snälla","bitte"],["ja","ja"],["nej","nein"],["kanske","vielleicht"],["och","und"],["eller","oder"],["men","aber"],["för","für / weil"],["med","mit"],["utan","ohne"],["i","in"],["på","auf / an"],["under","unter"],["över","über"],["från","von / aus"],["till","zu / nach"],["hos","bei"],["om","über / wenn"],["som","wie / der-die-das"],["att","zu / dass"],["inte","nicht"],["också","auch"],["bara","nur"],["mycket","viel / sehr"],["lite","wenig / etwas"],["mer","mehr"],["mindre","weniger"],["alltid","immer"],["aldrig","nie"],["ofta","oft"],["ibland","manchmal"],["nu","jetzt"],["sen","später / dann"],["idag","heute"],["igår","gestern"],["imorgon","morgen"],["morgon","Morgen"],["dag","Tag"],["kväll","Abend"],["natt","Nacht"],["vecka","Woche"],["månad","Monat"],["år","Jahr"],["tid","Zeit"],["gång","Mal / Gang"],["här","hier"],["där","dort"],["hem","nach Hause"],["hemma","zu Hause"],["borta","weg / nicht da"],["vem","wer"],["vad","was"],["var","wo"],["vart","wohin"],["när","wann / wenn"],["hur","wie"],["varför","warum"],["vilken","welcher"],["vilket","welches"],["vilka","welche"],["jag","ich"],["du","du"],["han","er"],["hon","sie"],["den","der / die"],["det","das / es"],["vi","wir"],["ni","ihr / Sie"],["de","sie"],["min","mein"],["din","dein"],["hans","sein"],["hennes","ihr"],["vår","unser"],["er","euer / Ihr"],["deras","deren / ihr"],["man","man"],["någon","jemand / irgendein"],["något","etwas / irgendein"],["ingen","niemand / kein"],["alla","alle"],["många","viele"],["få","wenige"],["en","ein / eine"],["ett","ein / eine"],["första","erste"],["andra","zweite / andere"],["samma","gleich / derselbe"],["annan","anderer"],["stor","groß"],["liten","klein"],["bra","gut"],["dålig","schlecht"],["ny","neu"],["gammal","alt"],["ung","jung"],["vacker","schön"],["ful","hässlich"],["glad","froh"],["ledsen","traurig"],["trött","müde"],["hungrig","hungrig"],["törstig","durstig"],["varm","warm"],["kall","kalt"],["lång","lang"],["kort","kurz"],["snabb","schnell"],["långsam","langsam"],["lätt","leicht"],["svår","schwierig"],["dyr","teuer"],["billig","billig"],["viktig","wichtig"],["rätt","richtig / Recht"],["fel","falsch / Fehler"],["vara","sein"],["ha","haben"],["göra","machen / tun"],["gå","gehen"],["komma","kommen"],["se","sehen"],["höra","hören"],["säga","sagen"],["prata","sprechen / reden"],["fråga","fragen"],["svara","antworten"],["veta","wissen"],["kunna","können"],["vilja","wollen"],["måste","müssen"],["behöva","brauchen / müssen"],["få","dürfen / bekommen"],["ta","nehmen"],["ge","geben"],["köpa","kaufen"],["betala","bezahlen"],["äta","essen"],["dricka","trinken"],["sova","schlafen"],["bo","wohnen"],["jobba","arbeiten"],["läsa","lesen"],["skriva","schreiben"],["lära","lernen"],["förstå","verstehen"],["glömma","vergessen"],["minnas","sich erinnern"],["hitta","finden"],["leta","suchen"],["vänta","warten"],["hjälpa","helfen"],["börja","beginnen"],["sluta","aufhören / enden"],["öppna","öffnen"],["stänga","schließen"],["köra","fahren"],["resa","reisen"],["stå","stehen"],["sitta","sitzen"],["ligga","liegen"],["hus","Haus"],["rum","Zimmer"],["dörr","Tür"],["fönster","Fenster"],["bord","Tisch"],["stol","Stuhl"],["säng","Bett"],["kök","Küche"],["toalett","Toilette"],["bil","Auto"],["buss","Bus"],["tåg","Zug"],["väg","Straße / Weg"],["stad","Stadt"],["land","Land"],["arbete","Arbeit"],["skola","Schule"],["butik","Geschäft"],["mat","Essen / Lebensmittel"],["vatten","Wasser"],["kaffe","Kaffee"],["bröd","Brot"],["mjölk","Milch"],["kött","Fleisch"],["fisk","Fisch"],["frukt","Obst"],["pengar","Geld"],["pris","Preis"],["vän","Freund"],["familj","Familie"],["barn","Kind"],["kvinna","Frau"],["mamma","Mutter"],["pappa","Vater"],["namn","Name"],["språk","Sprache"],["svenska","Schwedisch"],["tyska","Deutsch"],["Sverige","Schweden"],["Tyskland","Deutschland"],["problem","Problem"]
-].slice(0,200);
+  // Nomen
+  {id:"n1",type:"noun",de:"Haus",sv:"hus",gender:"ett",forms:["ett hus","huset","hus","husen"]},
+  {id:"n2",type:"noun",de:"Auto",sv:"bil",gender:"en",forms:["en bil","bilen","bilar","bilarna"]},
+  {id:"n3",type:"noun",de:"Mann",sv:"man",gender:"en",forms:["en man","mannen","män","männen"]},
+  {id:"n4",type:"noun",de:"Frau",sv:"kvinna",gender:"en",forms:["en kvinna","kvinnan","kvinnor","kvinnorna"]},
+  {id:"n5",type:"noun",de:"Kind",sv:"barn",gender:"ett",forms:["ett barn","barnet","barn","barnen"]},
+  {id:"n6",type:"noun",de:"Freund",sv:"vän",gender:"en",forms:["en vän","vännen","vänner","vännerna"]},
+  {id:"n7",type:"noun",de:"Familie",sv:"familj",gender:"en",forms:["en familj","familjen","familjer","familjerna"]},
+  {id:"n8",type:"noun",de:"Buch",sv:"bok",gender:"en",forms:["en bok","boken","böcker","böckerna"]},
+  {id:"n9",type:"noun",de:"Tisch",sv:"bord",gender:"ett",forms:["ett bord","bordet","bord","borden"]},
+  {id:"n10",type:"noun",de:"Stuhl",sv:"stol",gender:"en",forms:["en stol","stolen","stolar","stolarna"]},
+  {id:"n11",type:"noun",de:"Tür",sv:"dörr",gender:"en",forms:["en dörr","dörren","dörrar","dörrarna"]},
+  {id:"n12",type:"noun",de:"Fenster",sv:"fönster",gender:"ett",forms:["ett fönster","fönstret","fönster","fönstren"]},
+  {id:"n13",type:"noun",de:"Stadt",sv:"stad",gender:"en",forms:["en stad","staden","städer","städerna"]},
+  {id:"n14",type:"noun",de:"Land",sv:"land",gender:"ett",forms:["ett land","landet","länder","länderna"]},
+  {id:"n15",type:"noun",de:"Straße",sv:"gata",gender:"en",forms:["en gata","gatan","gator","gatorna"]},
+  {id:"n16",type:"noun",de:"Bahnhof",sv:"station",gender:"en",forms:["en station","stationen","stationer","stationerna"]},
+  {id:"n17",type:"noun",de:"Hotel",sv:"hotell",gender:"ett",forms:["ett hotell","hotellet","hotell","hotellen"]},
+  {id:"n18",type:"noun",de:"Restaurant",sv:"restaurang",gender:"en",forms:["en restaurang","restaurangen","restauranger","restaurangerna"]},
+  {id:"n19",type:"noun",de:"Schule",sv:"skola",gender:"en",forms:["en skola","skolan","skolor","skolorna"]},
+  {id:"n20",type:"noun",de:"Arbeit",sv:"arbete",gender:"ett",forms:["ett arbete","arbetet","arbeten","arbetena"]},
+  {id:"n21",type:"noun",de:"Tag",sv:"dag",gender:"en",forms:["en dag","dagen","dagar","dagarna"]},
+  {id:"n22",type:"noun",de:"Woche",sv:"vecka",gender:"en",forms:["en vecka","veckan","veckor","veckorna"]},
+  {id:"n23",type:"noun",de:"Monat",sv:"månad",gender:"en",forms:["en månad","månaden","månader","månaderna"]},
+  {id:"n24",type:"noun",de:"Jahr",sv:"år",gender:"ett",forms:["ett år","året","år","åren"]},
+  {id:"n25",type:"noun",de:"Zeit",sv:"tid",gender:"en",forms:["en tid","tiden","tider","tiderna"]},
+  {id:"n26",type:"noun",de:"Morgen",sv:"morgon",gender:"en",forms:["en morgon","morgonen","morgnar","morgnarna"]},
+  {id:"n27",type:"noun",de:"Abend",sv:"kväll",gender:"en",forms:["en kväll","kvällen","kvällar","kvällarna"]},
+  {id:"n28",type:"noun",de:"Nacht",sv:"natt",gender:"en",forms:["en natt","natten","nätter","nätterna"]},
+  {id:"n29",type:"noun",de:"Wasser",sv:"vatten",gender:"ett",forms:["ett vatten","vattnet","—","—"]},
+  {id:"n30",type:"noun",de:"Kaffee",sv:"kaffe",gender:"ett",forms:["ett kaffe","kaffet","—","—"]},
 
-// Zusatzinformationen zum Mitlernen. Schlüssel = Schwedisch||Deutsch,
-// damit mehrdeutige Wörter wie "få" korrekt behandelt werden.
-const nounArticles = {
-  "morgon||Morgen":"en","dag||Tag":"en","kväll||Abend":"en","natt||Nacht":"en",
-  "vecka||Woche":"en","månad||Monat":"en","år||Jahr":"ett","tid||Zeit":"en","gång||Mal / Gang":"en",
-  "fel||falsch / Fehler":"ett",
-  "hus||Haus":"ett","rum||Zimmer":"ett","dörr||Tür":"en","fönster||Fenster":"ett","bord||Tisch":"ett",
-  "stol||Stuhl":"en","säng||Bett":"en","kök||Küche":"ett","toalett||Toilette":"en","bil||Auto":"en",
-  "buss||Bus":"en","tåg||Zug":"ett","väg||Straße / Weg":"en","stad||Stadt":"en","land||Land":"ett",
-  "arbete||Arbeit":"ett","skola||Schule":"en","butik||Geschäft":"en","mat||Essen / Lebensmittel":"en",
-  "vatten||Wasser":"ett","kaffe||Kaffee":"ett","bröd||Brot":"ett","mjölk||Milch":"en","kött||Fleisch":"ett",
-  "fisk||Fisch":"en","frukt||Obst":"en","pris||Preis":"ett","vän||Freund":"en","familj||Familie":"en",
-  "barn||Kind":"ett","kvinna||Frau":"en","mamma||Mutter":"en","pappa||Vater":"en","namn||Name":"ett","språk||Sprache":"ett"
+  // Verben
+  {id:"v1",type:"verb",de:"sein",sv:"vara",forms:["vara","är","var","varit"]},
+  {id:"v2",type:"verb",de:"haben",sv:"ha",forms:["ha","har","hade","haft"]},
+  {id:"v3",type:"verb",de:"gehen",sv:"gå",forms:["gå","går","gick","gått"]},
+  {id:"v4",type:"verb",de:"kommen",sv:"komma",forms:["komma","kommer","kom","kommit"]},
+  {id:"v5",type:"verb",de:"machen",sv:"göra",forms:["göra","gör","gjorde","gjort"]},
+  {id:"v6",type:"verb",de:"sehen",sv:"se",forms:["se","ser","såg","sett"]},
+  {id:"v7",type:"verb",de:"wissen",sv:"veta",forms:["veta","vet","visste","vetat"]},
+  {id:"v8",type:"verb",de:"sagen",sv:"säga",forms:["säga","säger","sa/sade","sagt"]},
+  {id:"v9",type:"verb",de:"sprechen",sv:"tala",forms:["tala","talar","talade","talat"]},
+  {id:"v10",type:"verb",de:"verstehen",sv:"förstå",forms:["förstå","förstår","förstod","förstått"]},
+  {id:"v11",type:"verb",de:"essen",sv:"äta",forms:["äta","äter","åt","ätit"]},
+  {id:"v12",type:"verb",de:"trinken",sv:"dricka",forms:["dricka","dricker","drack","druckit"]},
+  {id:"v13",type:"verb",de:"wohnen",sv:"bo",forms:["bo","bor","bodde","bott"]},
+  {id:"v14",type:"verb",de:"arbeiten",sv:"arbeta",forms:["arbeta","arbetar","arbetade","arbetat"]},
+  {id:"v15",type:"verb",de:"lesen",sv:"läsa",forms:["läsa","läser","läste","läst"]},
+  {id:"v16",type:"verb",de:"schreiben",sv:"skriva",forms:["skriva","skriver","skrev","skrivit"]},
+  {id:"v17",type:"verb",de:"kaufen",sv:"köpa",forms:["köpa","köper","köpte","köpt"]},
+  {id:"v18",type:"verb",de:"bezahlen",sv:"betala",forms:["betala","betalar","betalade","betalat"]},
+  {id:"v19",type:"verb",de:"helfen",sv:"hjälpa",forms:["hjälpa","hjälper","hjälpte","hjälpt"]},
+  {id:"v20",type:"verb",de:"beginnen",sv:"börja",forms:["börja","börjar","började","börjat"]},
+  {id:"v21",type:"verb",de:"schlafen",sv:"sova",forms:["sova","sover","sov","sovit"]},
+  {id:"v22",type:"verb",de:"fahren",sv:"köra",forms:["köra","kör","körde","kört"]},
+  {id:"v23",type:"verb",de:"reisen/fahren",sv:"åka",forms:["åka","åker","åkte","åkt"]},
+  {id:"v24",type:"verb",de:"finden",sv:"hitta",forms:["hitta","hittar","hittade","hittat"]},
+  {id:"v25",type:"verb",de:"suchen",sv:"leta",forms:["leta","letar","letade","letat"]},
+  {id:"v26",type:"verb",de:"fragen",sv:"fråga",forms:["fråga","frågar","frågade","frågat"]},
+  {id:"v27",type:"verb",de:"antworten",sv:"svara",forms:["svara","svarar","svarade","svarat"]},
+  {id:"v28",type:"verb",de:"geben",sv:"ge",forms:["ge","ger","gav","gett"]},
+  {id:"v29",type:"verb",de:"nehmen",sv:"ta",forms:["ta","tar","tog","tagit"]},
+  {id:"v30",type:"verb",de:"lernen",sv:"lära sig",forms:["lära sig","lär sig","lärde sig","lärt sig"]},
+
+  // Adjektive
+  {id:"a1",type:"adjective",de:"groß",sv:"stor",forms:["stor","stort","stora","större","störst"]},
+  {id:"a2",type:"adjective",de:"klein",sv:"liten",forms:["liten","litet","små","mindre","minst"]},
+  {id:"a3",type:"adjective",de:"gut",sv:"bra",forms:["bra","bra","bra","bättre","bäst"]},
+  {id:"a4",type:"adjective",de:"schlecht",sv:"dålig",forms:["dålig","dåligt","dåliga","sämre","sämst"]},
+  {id:"a5",type:"adjective",de:"neu",sv:"ny",forms:["ny","nytt","nya","nyare","nyast"]},
+  {id:"a6",type:"adjective",de:"alt",sv:"gammal",forms:["gammal","gammalt","gamla","äldre","äldst"]},
+  {id:"a7",type:"adjective",de:"warm",sv:"varm",forms:["varm","varmt","varma","varmare","varmast"]},
+  {id:"a8",type:"adjective",de:"kalt",sv:"kall",forms:["kall","kallt","kalla","kallare","kallast"]},
+  {id:"a9",type:"adjective",de:"schön",sv:"vacker",forms:["vacker","vackert","vackra","vackrare","vackrast"]},
+  {id:"a10",type:"adjective",de:"schnell",sv:"snabb",forms:["snabb","snabbt","snabba","snabbare","snabbast"]},
+  {id:"a11",type:"adjective",de:"langsam",sv:"långsam",forms:["långsam","långsamt","långsamma","långsammare","långsammast"]},
+  {id:"a12",type:"adjective",de:"leicht",sv:"lätt",forms:["lätt","lätt","lätta","lättare","lättast"]},
+  {id:"a13",type:"adjective",de:"schwierig",sv:"svår",forms:["svår","svårt","svåra","svårare","svårast"]},
+  {id:"a14",type:"adjective",de:"müde",sv:"trött",forms:["trött","trött","trötta","tröttare","tröttast"]},
+  {id:"a15",type:"adjective",de:"glücklich",sv:"glad",forms:["glad","glatt","glada","gladare","gladast"]},
+
+  // Grundwörter
+  {id:"b1",type:"basic",de:"ich",sv:"jag"},
+  {id:"b2",type:"basic",de:"du",sv:"du"},
+  {id:"b3",type:"basic",de:"wir",sv:"vi"},
+  {id:"b4",type:"basic",de:"sie (Plural)",sv:"de"},
+  {id:"b5",type:"basic",de:"und",sv:"och"},
+  {id:"b6",type:"basic",de:"oder",sv:"eller"},
+  {id:"b7",type:"basic",de:"aber",sv:"men"},
+  {id:"b8",type:"basic",de:"nicht",sv:"inte"},
+  {id:"b9",type:"basic",de:"hier",sv:"här"},
+  {id:"b10",type:"basic",de:"dort",sv:"där"},
+  {id:"b11",type:"basic",de:"heute",sv:"idag"},
+  {id:"b12",type:"basic",de:"morgen",sv:"imorgon"},
+  {id:"b13",type:"basic",de:"gestern",sv:"igår"},
+  {id:"b14",type:"basic",de:"immer",sv:"alltid"},
+  {id:"b15",type:"basic",de:"manchmal",sv:"ibland"},
+  {id:"b16",type:"basic",de:"nie",sv:"aldrig"},
+  {id:"b17",type:"basic",de:"wer",sv:"vem"},
+  {id:"b18",type:"basic",de:"was",sv:"vad"},
+  {id:"b19",type:"basic",de:"wo",sv:"var"},
+  {id:"b20",type:"basic",de:"wohin",sv:"vart"},
+  {id:"b21",type:"basic",de:"wann",sv:"när"},
+  {id:"b22",type:"basic",de:"warum",sv:"varför"},
+  {id:"b23",type:"basic",de:"wie",sv:"hur"},
+  {id:"b24",type:"basic",de:"mit",sv:"med"},
+  {id:"b25",type:"basic",de:"ohne",sv:"utan"}
+];
+
+const formLabels = {
+ noun:["Unbestimmter Singular","Bestimmter Singular","Unbestimmter Plural","Bestimmter Plural"],
+ verb:["Infinitiv","Präsens","Präteritum","Supinum"],
+ adjective:["Grundform","ett-Form","Plural","Komparativ","Superlativ"]
 };
 
-const verbForms = {
-  "vara||sein":["vara","är"],"ha||haben":["ha","har"],"göra||machen / tun":["göra","gör"],
-  "gå||gehen":["gå","går"],"komma||kommen":["komma","kommer"],"se||sehen":["se","ser"],
-  "höra||hören":["höra","hör"],"säga||sagen":["säga","säger"],"prata||sprechen / reden":["prata","pratar"],
-  "fråga||fragen":["fråga","frågar"],"svara||antworten":["svara","svarar"],"veta||wissen":["veta","vet"],
-  "kunna||können":["kunna","kan"],"vilja||wollen":["vilja","vill"],"måste||müssen":["måsta","måste"],
-  "behöva||brauchen / müssen":["behöva","behöver"],"få||dürfen / bekommen":["få","får"],
-  "ta||nehmen":["ta","tar"],"ge||geben":["ge","ger"],"köpa||kaufen":["köpa","köper"],
-  "betala||bezahlen":["betala","betalar"],"äta||essen":["äta","äter"],"dricka||trinken":["dricka","dricker"],
-  "sova||schlafen":["sova","sover"],"bo||wohnen":["bo","bor"],"jobba||arbeiten":["jobba","jobbar"],
-  "läsa||lesen":["läsa","läser"],"skriva||schreiben":["skriva","skriver"],"lära||lernen":["lära","lär"],
-  "förstå||verstehen":["förstå","förstår"],"glömma||vergessen":["glömma","glömmer"],
-  "minnas||sich erinnern":["minnas","minns"],"hitta||finden":["hitta","hittar"],"leta||suchen":["leta","letar"],
-  "vänta||warten":["vänta","väntar"],"hjälpa||helfen":["hjälpa","hjälper"],"börja||beginnen":["börja","börjar"],
-  "sluta||aufhören / enden":["sluta","slutar"],"öppna||öffnen":["öppna","öppnar"],
-  "stänga||schließen":["stänga","stänger"],"köra||fahren":["köra","kör"],"resa||reisen":["resa","reser"],
-  "stå||stehen":["stå","står"],"sitta||sitzen":["sitta","sitter"],"ligga||liegen":["ligga","ligger"]
-};
+const state = JSON.parse(localStorage.getItem("svTrainerStateV3") || '{"right":0,"wrong":0,"streak":0,"weights":{}}');
+let current=null, currentDirection=null, expected=null, formIndex=null, answered=false;
 
-function grammarFor(sv,de){
-  const k=sv+"||"+de;
-  if(nounArticles[k]) return `<strong>Nomen:</strong> ${nounArticles[k]} ${sv}`;
-  if(verbForms[k]) {
-    const [inf,pres]=verbForms[k];
-    return `<strong>Verb:</strong> Infinitiv: att ${inf} · Präsens: ${pres}`;
+const $=id=>document.getElementById(id);
+function save(){ localStorage.setItem("svTrainerStateV3",JSON.stringify(state)); updateStats(); }
+function updateStats(){ $("rightCount").textContent=state.right; $("wrongCount").textContent=state.wrong; $("streak").textContent=state.streak; }
+
+function norm(s){
+  return (s||"").trim().toLowerCase()
+    .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+    .replace(/[.,!?;:]/g,"").replace(/\s+/g," ");
+}
+function acceptable(given, exp){
+  let g=norm(given), e=norm(exp);
+  if(g===e) return true;
+  if($("strictness").value==="lenient"){
+    if(e.includes("/") && e.split("/").some(x=>norm(x)===g)) return true;
+    if(g.length>=4 && e.startsWith(g)) return true;
   }
-  return "";
+  return false;
 }
+function pool(){
+  const cat=$("category").value;
+  return vocab.filter(v=>cat==="all" || v.type===cat);
+}
+function weightedChoice(items){
+  let expanded=[];
+  items.forEach(v=>{
+    let w=Math.max(1, state.weights[v.id]||1);
+    for(let i=0;i<w;i++) expanded.push(v);
+  });
+  return expanded[Math.floor(Math.random()*expanded.length)];
+}
+function pickDirection(v){
+  let d=$("direction").value;
+  if(d==="mixed") d=Math.random()<.5?"sv-de":"de-sv";
+  if(d==="forms" && !v.forms) d="de-sv";
+  return d;
+}
+function showForms(container, v, onlyAfter=false){
+  container.innerHTML="";
+  if(!v.forms) return;
+  formLabels[v.type].forEach((lab,i)=>{
+    const div=document.createElement("div");
+    div.className="formrow";
+    div.innerHTML=`<b>${lab}</b><span>${v.forms[i]}</span>`;
+    container.appendChild(div);
+  });
+}
+function newQuestion(){
+  answered=false; formIndex=null;
+  $("feedback").textContent="";
+  $("solutionBox").classList.add("hidden");
+  $("manualActions").classList.add("hidden");
+  $("visibleForms").classList.add("hidden");
+  $("answerInput").value="";
+  current=weightedChoice(pool());
+  currentDirection=pickDirection(current);
 
-const KEY="svenska200_mobile_v2";
-function fresh(){return{scores:Array(vocab.length).fill(0),seen:Array(vocab.length).fill(0),correct:0,wrong:0,answered:0,reverse:false}}
-let state=(()=>{try{let x=JSON.parse(localStorage.getItem(KEY));return x&&x.scores?.length===vocab.length?{...fresh(),...x}:fresh()}catch(e){return fresh()}})();
-let current=Math.floor(Math.random()*vocab.length),revealed=false,startX=0;
-function save(){localStorage.setItem(KEY,JSON.stringify(state))}
-function pick(){const w=vocab.map((_,i)=>{let s=state.scores[i],z=1;if(s<0)z+=Math.abs(s)*4.5;else if(s===0)z+=2;else z=Math.max(.35,1.5/(1+s*.65));if(!state.seen[i])z+=2.2;if(i===current)z*=.15;return z});let t=w.reduce((a,b)=>a+b,0),r=Math.random()*t;for(let i=0;i<w.length;i++){r-=w[i];if(r<=0)return i}return 0}
-function render(){
-  revealed=false;
-  let[sv,de]=vocab[current];
-  question.textContent=state.reverse?de:sv;
-  answer.textContent=state.reverse?sv:de;
-  const info=grammarFor(sv,de);
-  grammarInfo.innerHTML=info;
-  grammarInfo.style.display=info?"block":"none";
-  answer.classList.add("blur");
-  grammarInfo.classList.add("blur");
-  showArea.style.display="block";
-  judgeArea.style.display="none";
-  mode.textContent=state.reverse?"Deutsch → Schwedisch":"Schwedisch → Deutsch";
-  prompt.textContent=state.reverse?"Wie heißt dieses Wort auf Schwedisch?":"Was bedeutet dieses Wort?";
-  update()
+  const typeName={noun:"Nomen",verb:"Verb",adjective:"Adjektiv",basic:"Grundwort"}[current.type];
+  $("typeLabel").textContent=typeName;
+
+  if(currentDirection==="sv-de"){
+    $("word").textContent=current.sv;
+    $("prompt").textContent="Deutsche Übersetzung eingeben";
+    expected=current.de;
+    if(current.forms){
+      showForms($("visibleForms"),current);
+      $("visibleForms").classList.remove("hidden");
+    }
+  } else if(currentDirection==="de-sv"){
+    $("word").textContent=current.de;
+    $("prompt").textContent="Schwedisches Wort eingeben";
+    expected=current.sv;
+  } else {
+    formIndex=Math.floor(Math.random()*current.forms.length);
+    const labels=formLabels[current.type];
+    $("word").textContent=current.sv;
+    $("prompt").textContent=`Form eingeben: ${labels[formIndex]}`;
+    expected=current.forms[formIndex];
+  }
+  $("answerInput").focus();
 }
-function reveal(){
-  if(revealed)return;
-  revealed=true;
-  answer.classList.remove("blur");
-  grammarInfo.classList.remove("blur");
-  showArea.style.display="none";
-  judgeArea.style.display="grid"
+function renderSolution(){
+  $("solutionBox").innerHTML="";
+  const a=document.createElement("div");
+  a.className="formrow";
+  a.innerHTML=`<b>Deutsch</b><span>${current.de}</span>`;
+  $("solutionBox").appendChild(a);
+  const b=document.createElement("div");
+  b.className="formrow";
+  b.innerHTML=`<b>Schwedisch</b><span>${current.sv}</span>`;
+  $("solutionBox").appendChild(b);
+  if(current.gender){
+    const g=document.createElement("div");
+    g.className="formrow";
+    g.innerHTML=`<b>Artikel</b><span>${current.gender}</span>`;
+    $("solutionBox").appendChild(g);
+  }
+  if(current.forms){
+    formLabels[current.type].forEach((lab,i)=>{
+      const div=document.createElement("div");
+      div.className="formrow";
+      div.innerHTML=`<b>${lab}</b><span>${current.forms[i]}</span>`;
+      $("solutionBox").appendChild(div);
+    });
+  }
+  $("solutionBox").classList.remove("hidden");
 }
-function judge(ok){if(!revealed)return;state.seen[current]++;state.answered++;if(ok){state.correct++;state.scores[current]=Math.min(5,state.scores[current]+1)}else{state.wrong++;state.scores[current]=Math.max(-5,state.scores[current]-2)}save();current=pick();render()}
-function update(){const learned=state.scores.filter(x=>x>0).length,total=state.correct+state.wrong;correct.textContent=state.correct;wrong.textContent=state.wrong;rate.textContent=total?Math.round(state.correct/total*100)+"%":"–";problems.textContent=state.scores.filter(x=>x<0).length;answers.textContent=state.answered+" Antworten";counter.textContent=learned+" gelernt";progressBar.style.width=Math.round(learned/vocab.length*100)+"%"}
-showBtn.onclick=reveal;answer.onclick=reveal;rightBtn.onclick=()=>judge(true);wrongBtn.onclick=()=>judge(false);switchBtn.onclick=()=>{state.reverse=!state.reverse;save();render()};resetBtn.onclick=()=>{if(confirm("Gesamten Lernstand löschen?")){state=fresh();save();current=Math.floor(Math.random()*vocab.length);render()}};
-card.addEventListener("touchstart",e=>{startX=e.changedTouches[0].screenX},{passive:true});
-card.addEventListener("touchend",e=>{if(!revealed)return;let d=e.changedTouches[0].screenX-startX;if(Math.abs(d)>70)d>0?judge(true):judge(false)},{passive:true});
-if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js"))}
-render();
+function mark(ok){
+  if(ok){
+    state.right++; state.streak++;
+    state.weights[current.id]=Math.max(1,(state.weights[current.id]||1)-1);
+  } else {
+    state.wrong++; state.streak=0;
+    state.weights[current.id]=Math.min(8,(state.weights[current.id]||1)+2);
+  }
+  save();
+}
+function check(){
+  if(answered) return;
+  answered=true;
+  const ok=acceptable($("answerInput").value, expected);
+  $("feedback").textContent=ok ? "Richtig ✓" : `Nicht ganz – richtig ist: ${expected}`;
+  $("feedback").style.color=ok?"var(--ok)":"var(--bad)";
+  renderSolution();
+  mark(ok);
+  $("manualActions").classList.remove("hidden");
+}
+$("checkBtn").onclick=check;
+$("showBtn").onclick=()=>{ if(!answered){answered=true; renderSolution(); $("feedback").textContent=`Lösung: ${expected}`; $("feedback").style.color="var(--muted)"; $("manualActions").classList.remove("hidden");}};
+$("skipBtn").onclick=newQuestion;
+$("nextBtn").onclick=newQuestion;
+$("manualRight").onclick=()=>{ state.right++; state.streak++; save(); newQuestion(); };
+$("manualWrong").onclick=()=>{ state.wrong++; state.streak=0; state.weights[current.id]=Math.min(8,(state.weights[current.id]||1)+2); save(); newQuestion(); };
+$("answerInput").addEventListener("keydown",e=>{ if(e.key==="Enter"){ if(!answered) check(); else newQuestion(); }});
+$("category").onchange=newQuestion;
+$("direction").onchange=newQuestion;
+updateStats();
+newQuestion();
 </script>
 </body>
 </html>
