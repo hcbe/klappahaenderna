@@ -24,7 +24,7 @@ h1{font-size:24px;margin:0;font-weight:800}.tag{font-size:13px;color:var(--muted
 .prompt{color:var(--muted);font-size:14px;text-align:center;margin-top:10px}
 .word{flex:1;min-height:180px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(42px,12vw,68px);font-weight:800;line-height:1.08;padding:18px 0;word-break:break-word}
 .answer{min-height:72px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:clamp(28px,8vw,40px);font-weight:700;color:#93c5fd;margin-bottom:4px;padding:8px 0}
-.grammar-info{display:none;text-align:center;background:#172033;border:1px solid #334155;border-radius:14px;color:#e2e8f0;font-size:16px;line-height:1.5;margin:0 0 16px;padding:12px 14px}.grammar-info strong{color:#93c5fd}
+.grammar-info{display:none;text-align:center;background:#1e293b;border:2px solid #475569;border-radius:14px;color:#f8fafc;font-size:17px;line-height:1.6;margin:0 0 16px;padding:12px 14px}.grammar-info strong{color:#93c5fd}
 .blur{filter:blur(9px);opacity:.55;user-select:none}
 button{appearance:none;border:0;border-radius:16px;min-height:58px;font-size:18px;font-weight:800;padding:14px 16px;cursor:pointer}
 .show{background:var(--blue);color:white;width:100%}
@@ -40,7 +40,7 @@ button{appearance:none;border:0;border-radius:16px;min-height:58px;font-size:18p
 </head>
 <body>
 <div class="app">
-<div class="top"><div><h1>Svenska 200</h1><div class="tag">Schwedisch-Vokabeltrainer</div></div><div class="tag" id="counter">0 gelernt</div></div>
+<div class="top"><div><h1>Svenska 200</h1><div class="tag">Schwedisch-Vokabeltrainer · Version 4</div></div><div class="tag" id="counter">0 gelernt</div></div>
 <div class="progress"><div id="progressBar"></div></div>
 <main class="card" id="card">
 <div class="meta"><span id="mode">Schwedisch → Deutsch</span><span id="answers">0 Antworten</span></div>
@@ -55,55 +55,42 @@ button{appearance:none;border:0;border-radius:16px;min-height:58px;font-size:18p
 <div class="hint">Nach dem Aufdecken: nach links = falsch, nach rechts = richtig</div>
 </main></div>
 <script>
-const vocab = [
-["hej","hallo"],["hejdå","tschüss"],["tack","danke"],["snälla","bitte"],["ja","ja"],["nej","nein"],["kanske","vielleicht"],["och","und"],["eller","oder"],["men","aber"],["för","für / weil"],["med","mit"],["utan","ohne"],["i","in"],["på","auf / an"],["under","unter"],["över","über"],["från","von / aus"],["till","zu / nach"],["hos","bei"],["om","über / wenn"],["som","wie / der-die-das"],["att","zu / dass"],["inte","nicht"],["också","auch"],["bara","nur"],["mycket","viel / sehr"],["lite","wenig / etwas"],["mer","mehr"],["mindre","weniger"],["alltid","immer"],["aldrig","nie"],["ofta","oft"],["ibland","manchmal"],["nu","jetzt"],["sen","später / dann"],["idag","heute"],["igår","gestern"],["imorgon","morgen"],["morgon","Morgen"],["dag","Tag"],["kväll","Abend"],["natt","Nacht"],["vecka","Woche"],["månad","Monat"],["år","Jahr"],["tid","Zeit"],["gång","Mal / Gang"],["här","hier"],["där","dort"],["hem","nach Hause"],["hemma","zu Hause"],["borta","weg / nicht da"],["vem","wer"],["vad","was"],["var","wo"],["vart","wohin"],["när","wann / wenn"],["hur","wie"],["varför","warum"],["vilken","welcher"],["vilket","welches"],["vilka","welche"],["jag","ich"],["du","du"],["han","er"],["hon","sie"],["den","der / die"],["det","das / es"],["vi","wir"],["ni","ihr / Sie"],["de","sie"],["min","mein"],["din","dein"],["hans","sein"],["hennes","ihr"],["vår","unser"],["er","euer / Ihr"],["deras","deren / ihr"],["man","man"],["någon","jemand / irgendein"],["något","etwas / irgendein"],["ingen","niemand / kein"],["alla","alle"],["många","viele"],["få","wenige"],["en","ein / eine"],["ett","ein / eine"],["första","erste"],["andra","zweite / andere"],["samma","gleich / derselbe"],["annan","anderer"],["stor","groß"],["liten","klein"],["bra","gut"],["dålig","schlecht"],["ny","neu"],["gammal","alt"],["ung","jung"],["vacker","schön"],["ful","hässlich"],["glad","froh"],["ledsen","traurig"],["trött","müde"],["hungrig","hungrig"],["törstig","durstig"],["varm","warm"],["kall","kalt"],["lång","lang"],["kort","kurz"],["snabb","schnell"],["långsam","langsam"],["lätt","leicht"],["svår","schwierig"],["dyr","teuer"],["billig","billig"],["viktig","wichtig"],["rätt","richtig / Recht"],["fel","falsch / Fehler"],["vara","sein"],["ha","haben"],["göra","machen / tun"],["gå","gehen"],["komma","kommen"],["se","sehen"],["höra","hören"],["säga","sagen"],["prata","sprechen / reden"],["fråga","fragen"],["svara","antworten"],["veta","wissen"],["kunna","können"],["vilja","wollen"],["måste","müssen"],["behöva","brauchen / müssen"],["få","dürfen / bekommen"],["ta","nehmen"],["ge","geben"],["köpa","kaufen"],["betala","bezahlen"],["äta","essen"],["dricka","trinken"],["sova","schlafen"],["bo","wohnen"],["jobba","arbeiten"],["läsa","lesen"],["skriva","schreiben"],["lära","lernen"],["förstå","verstehen"],["glömma","vergessen"],["minnas","sich erinnern"],["hitta","finden"],["leta","suchen"],["vänta","warten"],["hjälpa","helfen"],["börja","beginnen"],["sluta","aufhören / enden"],["öppna","öffnen"],["stänga","schließen"],["köra","fahren"],["resa","reisen"],["stå","stehen"],["sitta","sitzen"],["ligga","liegen"],["hus","Haus"],["rum","Zimmer"],["dörr","Tür"],["fönster","Fenster"],["bord","Tisch"],["stol","Stuhl"],["säng","Bett"],["kök","Küche"],["toalett","Toilette"],["bil","Auto"],["buss","Bus"],["tåg","Zug"],["väg","Straße / Weg"],["stad","Stadt"],["land","Land"],["arbete","Arbeit"],["skola","Schule"],["butik","Geschäft"],["mat","Essen / Lebensmittel"],["vatten","Wasser"],["kaffe","Kaffee"],["bröd","Brot"],["mjölk","Milch"],["kött","Fleisch"],["fisk","Fisch"],["frukt","Obst"],["pengar","Geld"],["pris","Preis"],["vän","Freund"],["familj","Familie"],["barn","Kind"],["kvinna","Frau"],["mamma","Mutter"],["pappa","Vater"],["namn","Name"],["språk","Sprache"],["svenska","Schwedisch"],["tyska","Deutsch"],["Sverige","Schweden"],["Tyskland","Deutschland"],["problem","Problem"]
-].slice(0,200);
-
-// Zusatzinformationen zum Mitlernen. Schlüssel = Schwedisch||Deutsch,
-// damit mehrdeutige Wörter wie "få" korrekt behandelt werden.
-const nounArticles = {
-  "morgon||Morgen":"en","dag||Tag":"en","kväll||Abend":"en","natt||Nacht":"en",
-  "vecka||Woche":"en","månad||Monat":"en","år||Jahr":"ett","tid||Zeit":"en","gång||Mal / Gang":"en",
-  "fel||falsch / Fehler":"ett",
-  "hus||Haus":"ett","rum||Zimmer":"ett","dörr||Tür":"en","fönster||Fenster":"ett","bord||Tisch":"ett",
-  "stol||Stuhl":"en","säng||Bett":"en","kök||Küche":"ett","toalett||Toilette":"en","bil||Auto":"en",
-  "buss||Bus":"en","tåg||Zug":"ett","väg||Straße / Weg":"en","stad||Stadt":"en","land||Land":"ett",
-  "arbete||Arbeit":"ett","skola||Schule":"en","butik||Geschäft":"en","mat||Essen / Lebensmittel":"en",
-  "vatten||Wasser":"ett","kaffe||Kaffee":"ett","bröd||Brot":"ett","mjölk||Milch":"en","kött||Fleisch":"ett",
-  "fisk||Fisch":"en","frukt||Obst":"en","pris||Preis":"ett","vän||Freund":"en","familj||Familie":"en",
-  "barn||Kind":"ett","kvinna||Frau":"en","mamma||Mutter":"en","pappa||Vater":"en","namn||Name":"ett","språk||Sprache":"ett"
+const vocab = [{"sv":"hej","de":"hallo"},{"sv":"hejdå","de":"tschüss"},{"sv":"tack","de":"danke"},{"sv":"snälla","de":"bitte"},{"sv":"ja","de":"ja"},{"sv":"nej","de":"nein"},{"sv":"kanske","de":"vielleicht"},{"sv":"och","de":"und"},{"sv":"eller","de":"oder"},{"sv":"men","de":"aber"},{"sv":"för","de":"für / weil"},{"sv":"med","de":"mit"},{"sv":"utan","de":"ohne"},{"sv":"i","de":"in"},{"sv":"på","de":"auf / an"},{"sv":"under","de":"unter"},{"sv":"över","de":"über"},{"sv":"från","de":"von / aus"},{"sv":"till","de":"zu / nach"},{"sv":"hos","de":"bei"},{"sv":"om","de":"über / wenn"},{"sv":"som","de":"wie / der-die-das"},{"sv":"att","de":"zu / dass"},{"sv":"inte","de":"nicht"},{"sv":"också","de":"auch"},{"sv":"bara","de":"nur"},{"sv":"mycket","de":"viel / sehr"},{"sv":"lite","de":"wenig / etwas"},{"sv":"mer","de":"mehr"},{"sv":"mindre","de":"weniger"},{"sv":"alltid","de":"immer"},{"sv":"aldrig","de":"nie"},{"sv":"ofta","de":"oft"},{"sv":"ibland","de":"manchmal"},{"sv":"nu","de":"jetzt"},{"sv":"sen","de":"später / dann"},{"sv":"idag","de":"heute"},{"sv":"igår","de":"gestern"},{"sv":"imorgon","de":"morgen"},{"sv":"morgon","de":"Morgen","grammar":{"type":"noun","article":"en","label":"en morgon"}},{"sv":"dag","de":"Tag","grammar":{"type":"noun","article":"en","label":"en dag"}},{"sv":"kväll","de":"Abend","grammar":{"type":"noun","article":"en","label":"en kväll"}},{"sv":"natt","de":"Nacht","grammar":{"type":"noun","article":"en","label":"en natt"}},{"sv":"vecka","de":"Woche","grammar":{"type":"noun","article":"en","label":"en vecka"}},{"sv":"månad","de":"Monat","grammar":{"type":"noun","article":"en","label":"en månad"}},{"sv":"år","de":"Jahr","grammar":{"type":"noun","article":"ett","label":"ett år"}},{"sv":"tid","de":"Zeit","grammar":{"type":"noun","article":"en","label":"en tid"}},{"sv":"gång","de":"Mal / Gang","grammar":{"type":"noun","article":"en","label":"en gång"}},{"sv":"här","de":"hier"},{"sv":"där","de":"dort"},{"sv":"hem","de":"nach Hause"},{"sv":"hemma","de":"zu Hause"},{"sv":"borta","de":"weg / nicht da"},{"sv":"vem","de":"wer"},{"sv":"vad","de":"was"},{"sv":"var","de":"wo"},{"sv":"vart","de":"wohin"},{"sv":"när","de":"wann / wenn"},{"sv":"hur","de":"wie"},{"sv":"varför","de":"warum"},{"sv":"vilken","de":"welcher"},{"sv":"vilket","de":"welches"},{"sv":"vilka","de":"welche"},{"sv":"jag","de":"ich"},{"sv":"du","de":"du"},{"sv":"han","de":"er"},{"sv":"hon","de":"sie"},{"sv":"den","de":"der / die"},{"sv":"det","de":"das / es"},{"sv":"vi","de":"wir"},{"sv":"ni","de":"ihr / Sie"},{"sv":"de","de":"sie"},{"sv":"min","de":"mein"},{"sv":"din","de":"dein"},{"sv":"hans","de":"sein"},{"sv":"hennes","de":"ihr"},{"sv":"vår","de":"unser"},{"sv":"er","de":"euer / Ihr"},{"sv":"deras","de":"deren / ihr"},{"sv":"man","de":"man"},{"sv":"någon","de":"jemand / irgendein"},{"sv":"något","de":"etwas / irgendein"},{"sv":"ingen","de":"niemand / kein"},{"sv":"alla","de":"alle"},{"sv":"många","de":"viele"},{"sv":"få","de":"wenige"},{"sv":"en","de":"ein / eine"},{"sv":"ett","de":"ein / eine"},{"sv":"första","de":"erste"},{"sv":"andra","de":"zweite / andere"},{"sv":"samma","de":"gleich / derselbe"},{"sv":"annan","de":"anderer"},{"sv":"stor","de":"groß"},{"sv":"liten","de":"klein"},{"sv":"bra","de":"gut"},{"sv":"dålig","de":"schlecht"},{"sv":"ny","de":"neu"},{"sv":"gammal","de":"alt"},{"sv":"ung","de":"jung"},{"sv":"vacker","de":"schön"},{"sv":"ful","de":"hässlich"},{"sv":"glad","de":"froh"},{"sv":"ledsen","de":"traurig"},{"sv":"trött","de":"müde"},{"sv":"hungrig","de":"hungrig"},{"sv":"törstig","de":"durstig"},{"sv":"varm","de":"warm"},{"sv":"kall","de":"kalt"},{"sv":"lång","de":"lang"},{"sv":"kort","de":"kurz"},{"sv":"snabb","de":"schnell"},{"sv":"långsam","de":"langsam"},{"sv":"lätt","de":"leicht"},{"sv":"svår","de":"schwierig"},{"sv":"dyr","de":"teuer"},{"sv":"billig","de":"billig"},{"sv":"viktig","de":"wichtig"},{"sv":"rätt","de":"richtig / Recht"},{"sv":"fel","de":"falsch / Fehler","grammar":{"type":"noun","article":"ett","label":"ett fel"}},{"sv":"vara","de":"sein","grammar":{"type":"verb","infinitive":"vara","present":"är"}},{"sv":"ha","de":"haben","grammar":{"type":"verb","infinitive":"ha","present":"har"}},{"sv":"göra","de":"machen / tun","grammar":{"type":"verb","infinitive":"göra","present":"gör"}},{"sv":"gå","de":"gehen","grammar":{"type":"verb","infinitive":"gå","present":"går"}},{"sv":"komma","de":"kommen","grammar":{"type":"verb","infinitive":"komma","present":"kommer"}},{"sv":"se","de":"sehen","grammar":{"type":"verb","infinitive":"se","present":"ser"}},{"sv":"höra","de":"hören","grammar":{"type":"verb","infinitive":"höra","present":"hör"}},{"sv":"säga","de":"sagen","grammar":{"type":"verb","infinitive":"säga","present":"säger"}},{"sv":"prata","de":"sprechen / reden","grammar":{"type":"verb","infinitive":"prata","present":"pratar"}},{"sv":"fråga","de":"fragen","grammar":{"type":"verb","infinitive":"fråga","present":"frågar"}},{"sv":"svara","de":"antworten","grammar":{"type":"verb","infinitive":"svara","present":"svarar"}},{"sv":"veta","de":"wissen","grammar":{"type":"verb","infinitive":"veta","present":"vet"}},{"sv":"kunna","de":"können","grammar":{"type":"verb","infinitive":"kunna","present":"kan"}},{"sv":"vilja","de":"wollen","grammar":{"type":"verb","infinitive":"vilja","present":"vill"}},{"sv":"måste","de":"müssen","grammar":{"type":"verb","infinitive":"måste","present":"måste"}},{"sv":"behöva","de":"brauchen / müssen","grammar":{"type":"verb","infinitive":"behöva","present":"behöver"}},{"sv":"få","de":"dürfen / bekommen","grammar":{"type":"verb","infinitive":"få","present":"får"}},{"sv":"ta","de":"nehmen","grammar":{"type":"verb","infinitive":"ta","present":"tar"}},{"sv":"ge","de":"geben","grammar":{"type":"verb","infinitive":"ge","present":"ger"}},{"sv":"köpa","de":"kaufen","grammar":{"type":"verb","infinitive":"köpa","present":"köper"}},{"sv":"betala","de":"bezahlen","grammar":{"type":"verb","infinitive":"betala","present":"betalar"}},{"sv":"äta","de":"essen","grammar":{"type":"verb","infinitive":"äta","present":"äter"}},{"sv":"dricka","de":"trinken","grammar":{"type":"verb","infinitive":"dricka","present":"dricker"}},{"sv":"sova","de":"schlafen","grammar":{"type":"verb","infinitive":"sova","present":"sover"}},{"sv":"bo","de":"wohnen","grammar":{"type":"verb","infinitive":"bo","present":"bor"}},{"sv":"jobba","de":"arbeiten","grammar":{"type":"verb","infinitive":"jobba","present":"jobbar"}},{"sv":"läsa","de":"lesen","grammar":{"type":"verb","infinitive":"läsa","present":"läser"}},{"sv":"skriva","de":"schreiben","grammar":{"type":"verb","infinitive":"skriva","present":"skriver"}},{"sv":"lära","de":"lernen","grammar":{"type":"verb","infinitive":"lära","present":"lär"}},{"sv":"förstå","de":"verstehen","grammar":{"type":"verb","infinitive":"förstå","present":"förstår"}},{"sv":"glömma","de":"vergessen","grammar":{"type":"verb","infinitive":"glömma","present":"glömmer"}},{"sv":"minnas","de":"sich erinnern","grammar":{"type":"verb","infinitive":"minnas","present":"minns"}},{"sv":"hitta","de":"finden","grammar":{"type":"verb","infinitive":"hitta","present":"hittar"}},{"sv":"leta","de":"suchen","grammar":{"type":"verb","infinitive":"leta","present":"letar"}},{"sv":"vänta","de":"warten","grammar":{"type":"verb","infinitive":"vänta","present":"väntar"}},{"sv":"hjälpa","de":"helfen","grammar":{"type":"verb","infinitive":"hjälpa","present":"hjälper"}},{"sv":"börja","de":"beginnen","grammar":{"type":"verb","infinitive":"börja","present":"börjar"}},{"sv":"sluta","de":"aufhören / enden","grammar":{"type":"verb","infinitive":"sluta","present":"slutar"}},{"sv":"öppna","de":"öffnen","grammar":{"type":"verb","infinitive":"öppna","present":"öppnar"}},{"sv":"stänga","de":"schließen","grammar":{"type":"verb","infinitive":"stänga","present":"stänger"}},{"sv":"köra","de":"fahren","grammar":{"type":"verb","infinitive":"köra","present":"kör"}},{"sv":"resa","de":"reisen","grammar":{"type":"verb","infinitive":"resa","present":"reser"}},{"sv":"stå","de":"stehen","grammar":{"type":"verb","infinitive":"stå","present":"står"}},{"sv":"sitta","de":"sitzen","grammar":{"type":"verb","infinitive":"sitta","present":"sitter"}},{"sv":"ligga","de":"liegen","grammar":{"type":"verb","infinitive":"ligga","present":"ligger"}},{"sv":"hus","de":"Haus","grammar":{"type":"noun","article":"ett","label":"ett hus"}},{"sv":"rum","de":"Zimmer","grammar":{"type":"noun","article":"ett","label":"ett rum"}},{"sv":"dörr","de":"Tür","grammar":{"type":"noun","article":"en","label":"en dörr"}},{"sv":"fönster","de":"Fenster","grammar":{"type":"noun","article":"ett","label":"ett fönster"}},{"sv":"bord","de":"Tisch","grammar":{"type":"noun","article":"ett","label":"ett bord"}},{"sv":"stol","de":"Stuhl","grammar":{"type":"noun","article":"en","label":"en stol"}},{"sv":"säng","de":"Bett","grammar":{"type":"noun","article":"en","label":"en säng"}},{"sv":"kök","de":"Küche","grammar":{"type":"noun","article":"ett","label":"ett kök"}},{"sv":"toalett","de":"Toilette","grammar":{"type":"noun","article":"en","label":"en toalett"}},{"sv":"bil","de":"Auto","grammar":{"type":"noun","article":"en","label":"en bil"}},{"sv":"buss","de":"Bus","grammar":{"type":"noun","article":"en","label":"en buss"}},{"sv":"tåg","de":"Zug","grammar":{"type":"noun","article":"ett","label":"ett tåg"}},{"sv":"väg","de":"Straße / Weg","grammar":{"type":"noun","article":"en","label":"en väg"}},{"sv":"stad","de":"Stadt","grammar":{"type":"noun","article":"en","label":"en stad"}},{"sv":"land","de":"Land","grammar":{"type":"noun","article":"ett","label":"ett land"}},{"sv":"arbete","de":"Arbeit","grammar":{"type":"noun","article":"ett","label":"ett arbete"}},{"sv":"skola","de":"Schule","grammar":{"type":"noun","article":"en","label":"en skola"}},{"sv":"butik","de":"Geschäft","grammar":{"type":"noun","article":"en","label":"en butik"}},{"sv":"mat","de":"Essen / Lebensmittel","grammar":{"type":"noun","article":"en","label":"en mat"}},{"sv":"vatten","de":"Wasser","grammar":{"type":"noun","article":"ett","label":"ett vatten"}},{"sv":"kaffe","de":"Kaffee","grammar":{"type":"noun","article":"ett","label":"ett kaffe"}},{"sv":"bröd","de":"Brot","grammar":{"type":"noun","article":"ett","label":"ett bröd"}},{"sv":"mjölk","de":"Milch","grammar":{"type":"noun","article":"en","label":"en mjölk"}},{"sv":"kött","de":"Fleisch","grammar":{"type":"noun","article":"ett","label":"ett kött"}},{"sv":"fisk","de":"Fisch","grammar":{"type":"noun","article":"en","label":"en fisk"}},{"sv":"frukt","de":"Obst","grammar":{"type":"noun","article":"en","label":"en frukt"}},{"sv":"pengar","de":"Geld"},{"sv":"pris","de":"Preis","grammar":{"type":"noun","article":"ett","label":"ett pris"}},{"sv":"vän","de":"Freund","grammar":{"type":"noun","article":"en","label":"en vän"}},{"sv":"familj","de":"Familie","grammar":{"type":"noun","article":"en","label":"en familj"}},{"sv":"barn","de":"Kind","grammar":{"type":"noun","article":"ett","label":"ett barn"}},{"sv":"kvinna","de":"Frau","grammar":{"type":"noun","article":"en","label":"en kvinna"}},{"sv":"mamma","de":"Mutter","grammar":{"type":"noun","article":"en","label":"en mamma"}},{"sv":"pappa","de":"Vater","grammar":{"type":"noun","article":"en","label":"en pappa"}},{"sv":"namn","de":"Name","grammar":{"type":"noun","article":"ett","label":"ett namn"}},{"sv":"språk","de":"Sprache","grammar":{"type":"noun","article":"ett","label":"ett språk"}}];
+const els={
+  question:document.getElementById("question"),
+  answer:document.getElementById("answer"),
+  grammar:document.getElementById("grammarInfo"),
+  showArea:document.getElementById("showArea"),
+  judgeArea:document.getElementById("judgeArea"),
+  mode:document.getElementById("mode"),
+  prompt:document.getElementById("prompt"),
+  correct:document.getElementById("correct"),
+  wrong:document.getElementById("wrong"),
+  rate:document.getElementById("rate"),
+  problems:document.getElementById("problems"),
+  answers:document.getElementById("answers"),
+  counter:document.getElementById("counter"),
+  progressBar:document.getElementById("progressBar"),
+  showBtn:document.getElementById("showBtn"),
+  rightBtn:document.getElementById("rightBtn"),
+  wrongBtn:document.getElementById("wrongBtn"),
+  switchBtn:document.getElementById("switchBtn"),
+  resetBtn:document.getElementById("resetBtn"),
+  card:document.getElementById("card")
 };
-
-const verbForms = {
-  "vara||sein":["vara","är"],"ha||haben":["ha","har"],"göra||machen / tun":["göra","gör"],
-  "gå||gehen":["gå","går"],"komma||kommen":["komma","kommer"],"se||sehen":["se","ser"],
-  "höra||hören":["höra","hör"],"säga||sagen":["säga","säger"],"prata||sprechen / reden":["prata","pratar"],
-  "fråga||fragen":["fråga","frågar"],"svara||antworten":["svara","svarar"],"veta||wissen":["veta","vet"],
-  "kunna||können":["kunna","kan"],"vilja||wollen":["vilja","vill"],"måste||müssen":["måsta","måste"],
-  "behöva||brauchen / müssen":["behöva","behöver"],"få||dürfen / bekommen":["få","får"],
-  "ta||nehmen":["ta","tar"],"ge||geben":["ge","ger"],"köpa||kaufen":["köpa","köper"],
-  "betala||bezahlen":["betala","betalar"],"äta||essen":["äta","äter"],"dricka||trinken":["dricka","dricker"],
-  "sova||schlafen":["sova","sover"],"bo||wohnen":["bo","bor"],"jobba||arbeiten":["jobba","jobbar"],
-  "läsa||lesen":["läsa","läser"],"skriva||schreiben":["skriva","skriver"],"lära||lernen":["lära","lär"],
-  "förstå||verstehen":["förstå","förstår"],"glömma||vergessen":["glömma","glömmer"],
-  "minnas||sich erinnern":["minnas","minns"],"hitta||finden":["hitta","hittar"],"leta||suchen":["leta","letar"],
-  "vänta||warten":["vänta","väntar"],"hjälpa||helfen":["hjälpa","hjälper"],"börja||beginnen":["börja","börjar"],
-  "sluta||aufhören / enden":["sluta","slutar"],"öppna||öffnen":["öppna","öppnar"],
-  "stänga||schließen":["stänga","stänger"],"köra||fahren":["köra","kör"],"resa||reisen":["resa","reser"],
-  "stå||stehen":["stå","står"],"sitta||sitzen":["sitta","sitter"],"ligga||liegen":["ligga","ligger"]
-};
-
-function grammarFor(sv,de){
-  const k=sv+"||"+de;
-  if(nounArticles[k]) return `<strong>Artikel:</strong> ${nounArticles[k]} &nbsp;·&nbsp; <strong>Grundform:</strong> ${nounArticles[k]} ${sv}`;
-  if(verbForms[k]) {
-    const [inf,pres]=verbForms[k];
-    return `<strong>Infinitiv:</strong> att ${inf} &nbsp;·&nbsp; <strong>Präsens:</strong> ${pres}`;
+function grammarHTML(card){
+  if(!card.grammar) return "";
+  if(card.grammar.type==="noun"){
+    return `<div><strong>Artikel:</strong> ${card.grammar.article}</div>
+            <div><strong>Grundform:</strong> ${card.grammar.label}</div>`;
+  }
+  if(card.grammar.type==="verb"){
+    return `<div><strong>Infinitiv:</strong> att ${card.grammar.infinitive}</div>
+            <div><strong>Präsens:</strong> ${card.grammar.present}</div>`;
   }
   return "";
 }
-
-const KEY="svenska200_mobile_v2";
+const KEY="svenska200_pwa_v4";
 function fresh(){return{scores:Array(vocab.length).fill(0),seen:Array(vocab.length).fill(0),correct:0,wrong:0,answered:0,reverse:false}}
 let state=(()=>{try{let x=JSON.parse(localStorage.getItem(KEY));return x&&x.scores?.length===vocab.length?{...fresh(),...x}:fresh()}catch(e){return fresh()}})();
 let current=Math.floor(Math.random()*vocab.length),revealed=false,startX=0;
@@ -111,34 +98,34 @@ function save(){localStorage.setItem(KEY,JSON.stringify(state))}
 function pick(){const w=vocab.map((_,i)=>{let s=state.scores[i],z=1;if(s<0)z+=Math.abs(s)*4.5;else if(s===0)z+=2;else z=Math.max(.35,1.5/(1+s*.65));if(!state.seen[i])z+=2.2;if(i===current)z*=.15;return z});let t=w.reduce((a,b)=>a+b,0),r=Math.random()*t;for(let i=0;i<w.length;i++){r-=w[i];if(r<=0)return i}return 0}
 function render(){
   revealed=false;
-  let[sv,de]=vocab[current];
-  question.textContent=state.reverse?de:sv;
-  answer.textContent=state.reverse?sv:de;
-  const info=grammarFor(sv,de);
-  grammarInfo.innerHTML=info;
-  grammarInfo.style.display="none";
-  answer.classList.add("blur");
+  const cardData=vocab[current]; const sv=cardData.sv, de=cardData.de;
+  els.question.textContent=state.reverse?de:sv;
+  els.answer.textContent=state.reverse?sv:de;
+  const info=grammarHTML(cardData);
+  els.grammar.innerHTML=info;
+  els.grammar.style.display="none";
+  els.answer.classList.add("blur");
   
-  showArea.style.display="block";
-  judgeArea.style.display="none";
-  mode.textContent=state.reverse?"Deutsch → Schwedisch":"Schwedisch → Deutsch";
-  prompt.textContent=state.reverse?"Wie heißt dieses Wort auf Schwedisch?":"Was bedeutet dieses Wort?";
+  els.showArea.style.display="block";
+  els.judgeArea.style.display="none";
+  els.mode.textContent=state.reverse?"Deutsch → Schwedisch":"Schwedisch → Deutsch";
+  els.prompt.textContent=state.reverse?"Wie heißt dieses Wort auf Schwedisch?":"Was bedeutet dieses Wort?";
   update()
 }
 function reveal(){
   if(revealed)return;
   revealed=true;
-  answer.classList.remove("blur");
-  if(grammarInfo.innerHTML.trim()) grammarInfo.style.display="block";
-  showArea.style.display="none";
-  judgeArea.style.display="grid"
+  els.answer.classList.remove("blur");
+  if(els.grammar.innerHTML.trim()) els.grammar.style.display="block";
+  els.showArea.style.display="none";
+  els.judgeArea.style.display="grid"
 }
 function judge(ok){if(!revealed)return;state.seen[current]++;state.answered++;if(ok){state.correct++;state.scores[current]=Math.min(5,state.scores[current]+1)}else{state.wrong++;state.scores[current]=Math.max(-5,state.scores[current]-2)}save();current=pick();render()}
-function update(){const learned=state.scores.filter(x=>x>0).length,total=state.correct+state.wrong;correct.textContent=state.correct;wrong.textContent=state.wrong;rate.textContent=total?Math.round(state.correct/total*100)+"%":"–";problems.textContent=state.scores.filter(x=>x<0).length;answers.textContent=state.answered+" Antworten";counter.textContent=learned+" gelernt";progressBar.style.width=Math.round(learned/vocab.length*100)+"%"}
-showBtn.onclick=reveal;answer.onclick=reveal;rightBtn.onclick=()=>judge(true);wrongBtn.onclick=()=>judge(false);switchBtn.onclick=()=>{state.reverse=!state.reverse;save();render()};resetBtn.onclick=()=>{if(confirm("Gesamten Lernstand löschen?")){state=fresh();save();current=Math.floor(Math.random()*vocab.length);render()}};
-card.addEventListener("touchstart",e=>{startX=e.changedTouches[0].screenX},{passive:true});
-card.addEventListener("touchend",e=>{if(!revealed)return;let d=e.changedTouches[0].screenX-startX;if(Math.abs(d)>70)d>0?judge(true):judge(false)},{passive:true});
-if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js?v=3"))}
+function update(){const learned=state.scores.filter(x=>x>0).length,total=state.correct+state.wrong;els.correct.textContent=state.correct;els.wrong.textContent=state.wrong;els.rate.textContent=total?Math.round(state.correct/total*100)+"%":"–";els.problems.textContent=state.scores.filter(x=>x<0).length;els.answers.textContent=state.answered+" Antworten";els.counter.textContent=learned+" gelernt";progressBar.style.width=Math.round(learned/vocab.length*100)+"%"}
+els.showBtn.onclick=reveal;els.answer.onclick=reveal;els.rightBtn.onclick=()=>judge(true);els.wrongBtn.onclick=()=>judge(false);els.switchBtn.onclick=()=>{state.reverse=!state.reverse;save();render()};els.resetBtn.onclick=()=>{if(confirm("Gesamten Lernstand löschen?")){state=fresh();save();current=Math.floor(Math.random()*vocab.length);render()}};
+els.card.addEventListener("touchstart",e=>{startX=e.changedTouches[0].screenX},{passive:true});
+els.card.addEventListener("touchend",e=>{if(!revealed)return;let d=e.changedTouches[0].screenX-startX;if(Math.abs(d)>70)d>0?judge(true):judge(false)},{passive:true});
+if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js?v=4"))}
 render();
 </script>
 </body>
