@@ -61,7 +61,7 @@
     progressFill.style.width = pct + '%';
     queueInfo.textContent = queue.length
       ? `${queue.length} Wörter in der Warteschlange`
-      : 'Alle Wörter dieser Kategorie gemeistert! 🎉';
+      : 'Voulez-Vous noch eine Runde? 🎉';
   }
 
   function nextCard() {
